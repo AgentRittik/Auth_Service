@@ -71,6 +71,24 @@ class UserService {
             throw error;
         }
     }
+
+    async isAuthenticated(token){
+        try{
+            const response = this.verifyToken(token);
+            if(!response){
+                return {error: 'Invalid token'};
+            }
+            const user = this.userRepository.getById(response.id);
+            if(!user){
+                throw {error: 'No user with the corresponding token exists'};
+            }
+            return user.id; // why returning -> we can save this user id in incoming request
+        }
+        catch(error){
+            console.log("Something went wrong in authentication process");
+            throw error;
+        }
+    }
 }
 
 module.exports = UserService;
